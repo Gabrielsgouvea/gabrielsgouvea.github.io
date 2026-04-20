@@ -749,12 +749,24 @@ ul { list-style: none; }
   border-top: 1px solid var(--border-default);
   padding: 1.5rem 0;
   text-align: center;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   color: var(--text-secondary);
 }
-.footer a { color: var(--text-secondary); }
+.footer-links {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+.footer a {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--text-secondary);
+}
 .footer a:hover { color: var(--text-link); }
-.footer-gh { width: 14px; height: 14px; vertical-align: middle; margin-right: 0.3rem; }
+.footer-icon { width: 16px; height: 16px; flex-shrink: 0; }
 
 /* ============================================================
    SCROLL REVEAL ANIMATION
