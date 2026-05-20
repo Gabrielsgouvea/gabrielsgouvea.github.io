@@ -105,3 +105,182 @@ document.querySelectorAll('.gallery-fig img').forEach(img => {
     this.parentElement.insertBefore(placeholder, this);
   });
 });
+
+/* ---------- Dashboard Charts ---------- */
+document.addEventListener('DOMContentLoaded', () => {
+  const colCtx = document.getElementById('colunasChart');
+  const pizCtx = document.getElementById('pizzaChart');
+
+  if (!colCtx || !pizCtx) return;
+
+  // Register the datalabels plugin
+  Chart.register(ChartDataLabels);
+
+  const tooltipLabels = {
+    0.92: '11 meses',
+    1.5: '1 ano e meio',
+    2.5: '2 anos e meio',
+    3.5: '3 anos e meio',
+    5: '5 anos'
+  };
+
+  const getTooltipLabel = (val) => tooltipLabels[val] || (val + ' anos');
+
+  // Chart.js global font override
+  Chart.defaults.font.family = "'Inter', system-ui, sans-serif";
+  Chart.defaults.color = '#8b949e';
+
+  // 1. Column Chart (Left Side) - Banks & Modelings
+  new Chart(colCtx, {
+    type: 'bar',
+    data: {
+      labels: ['WolfCMS', 'PHPRunner', 'Oracle SQL', 'Powerdesigner', 'Workbench', 'MySQL'],
+      datasets: [{
+        label: 'Tempo de Experiência',
+        data: [0.92, 0.92, 5, 5, 2.5, 0.92],
+        backgroundColor: [
+          '#1f6feb', // WolfCMS - Blue
+          '#bc8cff', // PHPRunner - Purple
+          '#e3b341', // Oracle SQL - Yellow
+          '#f85149', // Powerdesigner - Red
+          '#3fb950', // Workbench - Green
+          '#f78166'  // MySQL - Orange
+        ],
+        borderColor: '#30363d',
+        borderWidth: 1,
+        borderRadius: 4,
+        hoverBackgroundColor: [
+          '#388bfd',
+          '#d3b6ff',
+          '#f2cc60',
+          '#ff7b72',
+          '#56d364',
+          '#ffa185'
+        ]
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: false
+        },
+        tooltip: {
+          backgroundColor: '#161b22',
+          borderColor: '#30363d',
+          borderWidth: 1,
+          titleColor: '#e6edf3',
+          bodyColor: '#e6edf3',
+          padding: 10,
+          displayColors: false,
+          callbacks: {
+            label: function(context) {
+              return ` Experiência: ${getTooltipLabel(context.raw)}`;
+            }
+          }
+        },
+        datalabels: {
+          color: '#ffffff',
+          anchor: 'center',
+          align: 'center',
+          font: {
+            weight: 'bold',
+            size: 11
+          },
+          formatter: (value, ctx) => {
+            let sum = 0;
+            let dataArr = ctx.chart.data.datasets[0].data;
+            dataArr.forEach(val => {
+              sum += val;
+            });
+            return (value * 100 / sum).toFixed(1) + "%";
+          }
+        }
+      },
+      scales: {
+        y: {
+          max: 6,
+          grid: {
+            color: 'rgba(48, 54, 61, 0.4)'
+          },
+          ticks: {
+            stepSize: 1,
+            callback: function(value) {
+              return value + (value === 1 ? ' ano' : ' anos');
+            }
+          }
+        },
+        x: {
+          grid: {
+            display: false
+          }
+        }
+      }
+    }
+  });
+
+  // 2. Pie/Doughnut Chart (Right Side) - Main Technologies
+  new Chart(pizCtx, {
+    type: 'doughnut',
+    data: {
+      labels: ['Powerbuilder', 'PHP', 'C#', 'DevOps / ALM'],
+      datasets: [{
+        data: [5, 3.5, 1.5, 5],
+        backgroundColor: [
+          '#1f6feb', // Powerbuilder - Blue
+          '#bc8cff', // PHP - Purple
+          '#3fb950', // C# - Green
+          '#f78166'  // DevOps / ALM - Orange
+        ],
+        borderColor: '#161b22',
+        borderWidth: 2,
+        hoverOffset: 6
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: {
+            boxWidth: 12,
+            padding: 15,
+            color: '#8b949e'
+          }
+        },
+        tooltip: {
+          backgroundColor: '#161b22',
+          borderColor: '#30363d',
+          borderWidth: 1,
+          titleColor: '#e6edf3',
+          bodyColor: '#e6edf3',
+          padding: 10,
+          displayColors: true,
+          callbacks: {
+            label: function(context) {
+              return ` Experiência: ${getTooltipLabel(context.raw)}`;
+            }
+          }
+        },
+        datalabels: {
+          color: '#ffffff',
+          font: {
+            weight: 'bold',
+            size: 11
+          },
+          formatter: (value, ctx) => {
+            let sum = 0;
+            let dataArr = ctx.chart.data.datasets[0].data;
+            dataArr.forEach(val => {
+              sum += val;
+            });
+            return (value * 100 / sum).toFixed(1) + "%";
+          }
+        }
+      }
+    }
+  });
+});
+

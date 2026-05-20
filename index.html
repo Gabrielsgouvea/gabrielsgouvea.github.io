@@ -47,7 +47,8 @@
         </a>
       </div>
       <ul class="nav-links" id="nav-links">
-        <li><a href="#home" class="nav-link active" data-section="home">Experiência</a></li>
+        <li><a href="#resumo" class="nav-link active" data-section="resumo">Resumo</a></li>
+        <li><a href="#home" class="nav-link" data-section="home">Experiência</a></li>
         <li><a href="#formacao" class="nav-link" data-section="formacao">Formação</a></li>
         <li><a href="#complementar" class="nav-link" data-section="complementar">Cursos</a></li>
         <li><a href="#historico" class="nav-link" data-section="historico">Histórico</a></li>
@@ -60,8 +61,8 @@
   </nav>
 
   <main>
-    <!-- ===== SECTION 1: HOME / EXPERIÊNCIA ===== -->
-    <section id="home" class="section">
+    <!-- ===== SECTION 0: RESUMO / DASHBOARD ===== -->
+    <section id="resumo" class="section">
       <div class="container">
         <!-- Profile card -->
         <div class="profile-card reveal">
@@ -81,6 +82,46 @@
           </div>
         </div>
 
+        <h1 class="section-title reveal">Resumo profissional</h1>
+        
+        <div class="dashboard-grid reveal">
+          <!-- Gráfico de Colunas (Esquerda) -->
+          <div class="dashboard-card">
+            <div class="dashboard-card-header">
+              <svg class="dashboard-card-icon" viewBox="0 0 16 16" fill="currentColor">
+                <path d="M8 1c3.866 0 7 1.12 7 2.5s-3.134 2.5-7 2.5-7-1.12-7-2.5S4.134 1 8 1ZM1 6c0 1.38 3.134 2.5 7 2.5s7-1.12 7-2.5V4.717c-.91 1.018-3.4 1.783-6 1.783s-5.09-.765-6-1.783V6Zm14 2.5c0 1.38-3.134 2.5-7 2.5-7-1.12-7-2.5V7.217c-.91 1.018-3.4 1.783-6 1.783s-5.09-.765-6-1.783V8.5Zm14 2.5c0 1.38-3.134 2.5-7 2.5-7-1.12-7-2.5v-1.283c-.91 1.018-3.4 1.783-6 1.783s-5.09-.765-6-1.783V11Z"/>
+              </svg>
+              <h3>Bancos de Dados & Modelagem</h3>
+            </div>
+            <div class="dashboard-card-body">
+              <div class="chart-container">
+                <canvas id="colunasChart"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- Gráfico de Pizza (Direita) -->
+          <div class="dashboard-card">
+            <div class="dashboard-card-header">
+              <svg class="dashboard-card-icon" viewBox="0 0 16 16" fill="currentColor">
+                <path d="M10.47 11.53a.75.75 0 0 1 0-1.06l2.47-2.47-2.47-2.47a.75.75 0 1 1 1.06-1.06l3 3a.75.75 0 0 1 0 1.06l-3 3a.75.75 0 0 1-1.06 0ZM5.53 11.53a.75.75 0 0 1-1.06 0l-3-3a.75.75 0 0 1 0-1.06l3-3a.75.75 0 1 1 1.06 1.06L3.03 8l2.5 2.5a.75.75 0 0 1 0 1.06Z"/>
+              </svg>
+              <h3>Tecnologias Principais</h3>
+            </div>
+            <div class="dashboard-card-body">
+              <div class="chart-container">
+                <canvas id="pizzaChart"></canvas>
+              </div>
+            </div>
+          </div>
+
+                 </div>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 1: HOME / EXPERIÊNCIA ===== -->
+    <section id="home" class="section">
+      <div class="container">
         <h1 class="section-title reveal">Experiência profissional</h1>
 
         <!-- Job 1 -->
@@ -543,6 +584,8 @@
     </div>
   </footer>
 
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
   <script src="script.js"></script>
 </body>
 

@@ -179,7 +179,7 @@ ul { list-style: none; }
 /* ============================================================
    SECTIONS
    ============================================================ */
-.section { padding: 4rem 0; }
+.section { padding: 3rem 0; }
 .section-alt { background: var(--bg-default); border-top: 1px solid var(--border-default); border-bottom: 1px solid var(--border-default); }
 
 .section-title {
@@ -769,6 +769,79 @@ ul { list-style: none; }
 .footer-icon { width: 16px; height: 16px; flex-shrink: 0; }
 
 /* ============================================================
+   DASHBOARD (resumo)
+   ============================================================ */
+#resumo {
+  padding-bottom: 0;
+}
+#home {
+  padding-top: 0.5rem;
+}
+section[id], h2[id], h1[id] {
+  scroll-margin-top: 75px;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.dashboard-card {
+  background: var(--bg-default);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow-md);
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.dashboard-card:hover {
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 0 3px rgba(31,111,235,.12), var(--shadow-md);
+}
+
+.dashboard-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  background: var(--bg-subtle);
+  border-bottom: 1px solid var(--border-muted);
+}
+
+.dashboard-card-icon {
+  width: 18px;
+  height: 18px;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}
+
+.dashboard-card-header h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.dashboard-card-body {
+  padding: 1.5rem;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chart-container {
+  position: relative;
+  width: 100%;
+  height: 320px;
+}
+
+/* ============================================================
    SCROLL REVEAL ANIMATION
    ============================================================ */
 .reveal {
@@ -809,6 +882,9 @@ ul { list-style: none; }
 
   .section-title { font-size: 1.4rem; }
   .tech-block-title { font-size: 1rem; }
+
+  .dashboard-grid { grid-template-columns: 1fr; }
+  .chart-container { height: 280px; }
 }
 
 @media (max-width: 500px) {
