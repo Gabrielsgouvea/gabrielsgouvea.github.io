@@ -902,11 +902,17 @@ section[id], h2[id], h1[id] {
 ::-webkit-scrollbar-thumb:hover { background: #484f58; }
 
 /* ---------- Bubble Chart Legend ---------- */
+.bubble-chart-body {
+  flex-direction: column;
+  align-items: stretch;
+}
+
 .bubble-legend {
   display: flex;
   gap: 1.5rem;
-  flex-wrap: wrap;
-  margin-bottom: 1rem;
+  flex-wrap: nowrap;
+  justify-content: center;
+  margin-top: 1rem;
   padding: 0 0.25rem;
 }
 
