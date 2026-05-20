@@ -126,6 +126,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const getTooltipLabel = (val) => tooltipLabels[val] || (val + ' anos');
 
+  // Multi-line version for bar chart datalabels (array = each item is a new line)
+  const barDatalabelLines = {
+    0.92: ['11', 'meses'],
+    1.5:  ['1', 'ano', 'e meio'],
+    2.5:  ['2', 'anos', 'e meio'],
+    3.5:  ['3', 'anos', 'e meio'],
+    5:    ['5', 'anos']
+  };
+
+  const getBarLabel = (val) => barDatalabelLines[val] || [val + ' anos'];
+
   // Chart.js global font override
   Chart.defaults.font.family = "'Inter', system-ui, sans-serif";
   Chart.defaults.color = '#8b949e';
@@ -184,18 +195,12 @@ document.addEventListener('DOMContentLoaded', () => {
           color: '#ffffff',
           anchor: 'center',
           align: 'center',
+          textAlign: 'center',
           font: {
             weight: 'bold',
             size: 11
           },
-          formatter: (value, ctx) => {
-            let sum = 0;
-            let dataArr = ctx.chart.data.datasets[0].data;
-            dataArr.forEach(val => {
-              sum += val;
-            });
-            return (value * 100 / sum).toFixed(1) + "%";
-          }
+          formatter: (value) => getBarLabel(value)
         }
       },
       scales: {
@@ -270,14 +275,131 @@ document.addEventListener('DOMContentLoaded', () => {
             weight: 'bold',
             size: 11
           },
-          formatter: (value, ctx) => {
-            let sum = 0;
-            let dataArr = ctx.chart.data.datasets[0].data;
-            dataArr.forEach(val => {
-              sum += val;
-            });
-            return (value * 100 / sum).toFixed(1) + "%";
+          formatter: (value) => getTooltipLabel(value)
+        }
+      }
+    }
+  });
+
+  // 3. Bubble Chart — Linguagens de Programação
+  const bubCtx = document.getElementById('bubbleChart');
+  if (!bubCtx) return;
+
+  const smallBubbles = {
+    label: 'Pequeno (P)',
+    backgroundColor: 'rgba(31, 111, 235, 0.75)',
+    borderColor: '#388bfd',
+    borderWidth: 1.5,
+    hoverBackgroundColor: 'rgba(56, 139, 253, 0.9)',
+    data: [
+      { x: 3,   y: 1,    r: 9,  label: 'HTML' },
+      { x: 2,   y: 0.5,  r: 9,  label: 'Java' },
+      { x: 2.3, y: 0.42, r: 9,  label: 'JavaScript' },
+      { x: 1,   y: 0.25, r: 9,  label: 'CSS' },
+      { x: 1.7, y: 0.42, r: 9,  label: 'Python' },
+      { x: 1,   y: 0.5,  r: 9,  label: 'C' },
+    ]
+  };
+
+  const mediumBubbles = {
+    label: 'Médio (M)',
+    backgroundColor: 'rgba(63, 185, 80, 0.75)',
+    borderColor: '#56d364',
+    borderWidth: 1.5,
+    hoverBackgroundColor: 'rgba(86, 211, 100, 0.9)',
+    data: [
+      { x: 4, y: 2, r: 16, label: 'Basic4android / B4J' },
+      { x: 3, y: 2, r: 16, label: 'Xojo (RealBasic)' },
+    ]
+  };
+
+  const largeBubbles = {
+    label: 'Grande (G)',
+    backgroundColor: 'rgba(248, 81, 73, 0.75)',
+    borderColor: '#ff7b72',
+    borderWidth: 1.5,
+    hoverBackgroundColor: 'rgba(255, 123, 114, 0.9)',
+    data: [
+      { x: 8, y: 3, r: 26, label: 'Visual Basic 6.0' },
+    ]
+  };
+
+  new Chart(bubCtx, {
+    type: 'bubble',
+    data: { datasets: [smallBubbles, mediumBubbles, largeBubbles] },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#161b22',
+          borderColor: '#30363d',
+          borderWidth: 1,
+          titleColor: '#e6edf3',
+          bodyColor: '#8b949e',
+          padding: 10,
+          displayColors: false,
+          callbacks: {
+            title: (items) => items[0].raw.label,
+            label: (ctx) => {
+              const d = ctx.raw;
+              const meses = Math.round(d.y * 12);
+              const tempoStr = d.y >= 1
+                ? `${d.y} ano${d.y > 1 ? 's' : ''}`
+                : `${meses} ${meses === 1 ? 'mês' : 'meses'}`;
+              return [` Estudo: ${tempoStr}`, ` Nível de Domínio: ${d.x}/10`];
+            }
           }
+        },
+        datalabels: {
+          color: '#e6edf3',
+          anchor: 'center',
+          align: (ctx) => {
+            const right = ['JavaScript'];
+            const below = ['Python', 'Xojo (RealBasic)'];
+            if (right.includes(ctx.dataset.data[ctx.dataIndex].label)) return 'right';
+            return below.includes(ctx.dataset.data[ctx.dataIndex].label) ? 'bottom' : 'top';
+          },
+          offset: 6,
+          font: { size: 10, weight: '500' },
+          formatter: (value) => value.label
+        }
+      },
+      scales: {
+        x: {
+          title: {
+            display: true,
+            text: 'Nível de Domínio',
+            color: '#8b949e',
+            font: { size: 12 }
+          },
+          min: 0,
+          max: 10,
+          ticks: {
+            stepSize: 1,
+            callback: (v) => v === 0 ? '' : v
+          },
+          grid: { color: 'rgba(48, 54, 61, 0.4)' }
+        },
+        y: {
+          title: {
+            display: true,
+            text: 'Anos de Estudo',
+            color: '#8b949e',
+            font: { size: 12 }
+          },
+          min: 0,
+          max: 3.8,
+          ticks: {
+            stepSize: 0.5,
+            callback: (v) => {
+              if (v === 0) return '';
+              if (v < 1) return `${Math.round(v * 12)}m`;
+              return `${v}a`;
+            }
+          },
+          grid: { color: 'rgba(48, 54, 61, 0.4)' }
         }
       }
     }

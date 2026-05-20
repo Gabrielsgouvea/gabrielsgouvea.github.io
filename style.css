@@ -900,3 +900,47 @@ section[id], h2[id], h1[id] {
 ::-webkit-scrollbar-track { background: var(--bg-canvas); }
 ::-webkit-scrollbar-thumb { background: var(--bg-overlay); border-radius: 4px; }
 ::-webkit-scrollbar-thumb:hover { background: #484f58; }
+
+/* ---------- Bubble Chart Legend ---------- */
+.bubble-legend {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+  padding: 0 0.25rem;
+}
+
+.bubble-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+}
+
+.bubble-dot {
+  display: inline-block;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.bubble-dot-p {
+  width: 10px;
+  height: 10px;
+  background: rgba(31, 111, 235, 0.75);
+  border: 1.5px solid #388bfd;
+}
+
+.bubble-dot-m {
+  width: 16px;
+  height: 16px;
+  background: rgba(63, 185, 80, 0.75);
+  border: 1.5px solid #56d364;
+}
+
+.bubble-dot-g {
+  width: 22px;
+  height: 22px;
+  background: rgba(248, 81, 73, 0.75);
+  border: 1.5px solid #ff7b72;
+}
