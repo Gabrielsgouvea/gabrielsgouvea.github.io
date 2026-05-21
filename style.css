@@ -88,12 +88,25 @@ ul { list-style: none; }
 
 .nav-inner {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;
   max-width: 900px;
   margin: 0 auto;
   padding: 0 1.25rem;
-  height: 60px;
+}
+
+.nav-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 52px;
+}
+
+.nav-bottom-row {
+  display: flex;
+  align-items: center;
+  border-top: 1px solid var(--border-muted);
+  padding: 0.3rem 0;
+  gap: 0.5rem;
 }
 
 .nav-logo {
@@ -158,6 +171,66 @@ ul { list-style: none; }
   background: var(--bg-overlay);
   color: var(--text-primary);
 }
+
+/* PDF nav button */
+.nav-top-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.nav-pdf-wrapper {
+  position: relative;
+  flex-shrink: 0;
+}
+.nav-pdf-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px; height: 32px;
+  background: none;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: color var(--transition), background var(--transition), border-color var(--transition);
+}
+.nav-pdf-btn:hover,
+.nav-pdf-btn[aria-expanded="true"] {
+  color: var(--text-primary);
+  background: var(--bg-overlay);
+  border-color: var(--text-secondary);
+}
+.nav-pdf-btn svg { width: 18px; height: 18px; flex-shrink: 0; }
+
+.nav-pdf-dropdown {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: calc(100% + 6px);
+  background: var(--bg-default);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
+  min-width: 200px;
+  z-index: 200;
+  overflow: hidden;
+}
+.nav-pdf-dropdown.open { display: block; }
+.nav-pdf-dropdown a {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.65rem 1rem;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  transition: background var(--transition), color var(--transition);
+  text-decoration: none;
+}
+.nav-pdf-dropdown a:hover {
+  background: var(--bg-overlay);
+  color: var(--text-primary);
+}
+.nav-pdf-dropdown a svg { width: 15px; height: 15px; flex-shrink: 0; }
 
 .nav-toggle {
   display: none;
@@ -778,7 +851,7 @@ ul { list-style: none; }
   padding-top: 0.5rem;
 }
 section[id], h2[id], h1[id] {
-  scroll-margin-top: 75px;
+  scroll-margin-top: 100px;
 }
 
 .dashboard-grid {
@@ -858,11 +931,15 @@ section[id], h2[id], h1[id] {
    RESPONSIVE
    ============================================================ */
 @media (max-width: 700px) {
+  .nav-bottom-row {
+    border-top: none;
+    padding: 0;
+  }
   .nav-links {
     display: none;
     flex-direction: column;
     position: absolute;
-    top: 60px; left: 0; right: 0;
+    top: 52px; left: 0; right: 0;
     background: rgba(13,17,23,.97);
     border-bottom: 1px solid var(--border-default);
     padding: 0.75rem 1rem;
@@ -870,6 +947,7 @@ section[id], h2[id], h1[id] {
   }
   .nav-links.open { display: flex; }
   .nav-toggle { display: flex; }
+  .nav-pdf-wrapper { margin-left: 0; }
 
   .profile-card { flex-direction: column; text-align: center; align-items: center; }
 

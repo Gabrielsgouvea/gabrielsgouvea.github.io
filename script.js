@@ -8,6 +8,49 @@ window.addEventListener('scroll', () => {
   navbar.classList.toggle('scrolled', window.scrollY > 10);
 }, { passive: true });
 
+/* ---------- PDF dropdown ---------- */
+const pdfBtn      = document.getElementById('nav-pdf-btn');
+const pdfDropdown = document.getElementById('nav-pdf-dropdown');
+
+pdfBtn.addEventListener('click', (e) => {
+  e.stopPropagation();
+  const isOpen = pdfDropdown.classList.toggle('open');
+  pdfBtn.setAttribute('aria-expanded', isOpen);
+});
+
+document.addEventListener('click', () => {
+  pdfDropdown.classList.remove('open');
+  pdfBtn.setAttribute('aria-expanded', 'false');
+});
+
+pdfDropdown.addEventListener('click', (e) => e.stopPropagation());
+
+/* Baixar PDF: fetch → blob → save dialog, sem redirecionar a página */
+const pdfDownloadLink = document.querySelector('#nav-pdf-dropdown a[download]');
+if (pdfDownloadLink) {
+  pdfDownloadLink.addEventListener('click', async (e) => {
+    e.preventDefault();
+    const url = pdfDownloadLink.getAttribute('href');
+    try {
+      const res  = await fetch(url);
+      const blob = await res.blob();
+      const obj  = URL.createObjectURL(blob);
+      const a    = document.createElement('a');
+      a.href     = obj;
+      a.download = 'CV-Gabriel.pdf';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(obj);
+    } catch {
+      /* fallback: abre em nova aba se fetch falhar */
+      window.open(url, '_blank', 'noopener');
+    }
+    pdfDropdown.classList.remove('open');
+    pdfBtn.setAttribute('aria-expanded', 'false');
+  });
+}
+
 /* ---------- Mobile nav toggle ---------- */
 const navToggle = document.getElementById('nav-toggle');
 const navLinks  = document.getElementById('nav-links');
@@ -327,6 +370,44 @@ document.addEventListener('DOMContentLoaded', () => {
   new Chart(bubCtx, {
     type: 'bubble',
     data: { datasets: [smallBubbles, mediumBubbles, largeBubbles] },
+    plugins: [{
+      id: 'bubbleLeaderLines',
+      afterDatasetsDraw(chart) {
+        const ctx2 = chart.ctx;
+        chart.data.datasets.forEach((dataset, di) => {
+          const meta = chart.getDatasetMeta(di);
+          dataset.data.forEach((point, i) => {
+            const el = meta.data[i];
+            if (!el || !point.label) return;
+            const { x, y } = el;
+            const r = point.r;
+
+            const rightLabels = ['JavaScript'];
+            const belowLabels = ['Python', 'Xojo (RealBasic)'];
+            const leftLabels  = ['CSS'];
+
+            let dx = 0, dy = -1; // default: top
+            if (rightLabels.includes(point.label)) { dx = 1;  dy = 0; }
+            else if (belowLabels.includes(point.label)) { dx = 0;  dy = 1; }
+            else if (leftLabels.includes(point.label))  { dx = -1; dy = 0; }
+
+            const x1 = x + dx * (r + 2);
+            const y1 = y + dy * (r + 2);
+            const x2 = x + dx * (r + 11);
+            const y2 = y + dy * (r + 11);
+
+            ctx2.save();
+            ctx2.beginPath();
+            ctx2.moveTo(x1, y1);
+            ctx2.lineTo(x2, y2);
+            ctx2.strokeStyle = 'rgba(139, 148, 158, 0.6)';
+            ctx2.lineWidth = 1;
+            ctx2.stroke();
+            ctx2.restore();
+          });
+        });
+      }
+    }],
     options: {
       responsive: true,
       maintainAspectRatio: false,
@@ -356,12 +437,16 @@ document.addEventListener('DOMContentLoaded', () => {
           color: '#e6edf3',
           anchor: 'center',
           align: (ctx) => {
-            const right = ['JavaScript'];
-            const below = ['Python', 'Xojo (RealBasic)'];
-            if (right.includes(ctx.dataset.data[ctx.dataIndex].label)) return 'right';
-            return below.includes(ctx.dataset.data[ctx.dataIndex].label) ? 'bottom' : 'top';
+            const label = ctx.dataset.data[ctx.dataIndex].label;
+            if (['JavaScript'].includes(label)) return 'right';
+            if (['Python', 'Xojo (RealBasic)'].includes(label)) return 'bottom';
+            if (['CSS'].includes(label)) return 'left';
+            return 'top';
           },
-          offset: 6,
+          offset: (ctx) => {
+            const label = ctx.dataset.data[ctx.dataIndex].label;
+            return label === 'Visual Basic 6.0' ? 30 : 16;
+          },
           font: { size: 10, weight: '500' },
           formatter: (value) => value.label
         }
