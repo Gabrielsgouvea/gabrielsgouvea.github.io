@@ -37,8 +37,6 @@
       <!-- Linha 1: brand + botão PDF + toggle mobile -->
       <div class="nav-top-row">
         <div class="nav-brand">
-        
-
           <a href="https://github.com/Gabrielsgouvea" class="nav-social-link" target="_blank" rel="noopener"
             aria-label="GitHub de Gabriel Gouvêa">
             <svg class="nav-social-icon" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
@@ -64,7 +62,7 @@
 
         <!-- Botão PDF + toggle -->
         <div class="nav-top-actions">
-          <p class="profile-bio"> Arquivo em PDF</p>
+          <p class="nav-pdf-text">Arquivo em PDF</p>
           <div class="nav-pdf-wrapper">
             <button class="nav-pdf-btn" id="nav-pdf-btn" aria-label="Currículo em PDF" aria-expanded="false">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -86,7 +84,7 @@
                 </svg>
                 Visualizar em outra aba
               </a>
-              <a href="#" id="download-pdf-link" onclick="forceDownloadPDF(event)">
+              <a href="arq/CV-Gabriel.pdf" download="CV-Gabriel.pdf" id="download-pdf-link" onclick="forceDownloadPDF(event)">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
                   stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                   <path d="M12 15V3m0 12-4-4m4 4 4-4"/>
@@ -96,10 +94,7 @@
               </a>
             </div>
           </div>
-          <button class="nav-toggle" id="nav-toggle" aria-label="Abrir menu">
-            <span></span><span></span><span></span>
-          </button>
-            <!-- Botão de Alternância de Tema -->
+          <!-- Botão de Alternância de Tema -->
           <button id="theme-toggle" class="theme-toggle-btn" aria-label="Alternar tema claro/escuro">
             <!-- Ícone do Sol (Visível no tema claro) -->
             <svg class="theme-icon moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -110,6 +105,10 @@
             <svg class="theme-icon sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
             </svg>
+          </button>
+          <!-- Botão de Menu Mobile -->
+          <button class="nav-toggle" id="nav-toggle" aria-label="Abrir menu">
+            <span></span><span></span><span></span>
           </button>
         </div>
       </div>
