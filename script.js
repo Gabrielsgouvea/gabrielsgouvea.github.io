@@ -31,6 +31,21 @@ if (pdfDownloadLink) {
   pdfDownloadLink.addEventListener('click', async (e) => {
     e.preventDefault();
     const url = pdfDownloadLink.getAttribute('href');
+
+    // Evita erros de restrição de segurança CORS ao visualizar no protocolo file:// localmente
+    if (window.location.protocol === 'file:') {
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'CV-Gabriel.pdf';
+      a.setAttribute('target', '_blank');
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      pdfDropdown.classList.remove('open');
+      pdfBtn.setAttribute('aria-expanded', 'false');
+      return;
+    }
+
     try {
       const res  = await fetch(url);
       const blob = await res.blob();
@@ -134,13 +149,13 @@ document.querySelectorAll('.gallery-fig img').forEach(img => {
     const placeholder = document.createElement('div');
     placeholder.style.cssText = `
       height: 180px;
-      background: #1c2128;
-      border: 1px dashed #30363d;
+      background: var(--bg-subtle);
+      border: 1px dashed var(--border-default);
       border-radius: 6px;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #8b949e;
+      color: var(--text-secondary);
       font-size: 0.8rem;
       font-family: 'JetBrains Mono', monospace;
     `;
@@ -149,7 +164,62 @@ document.querySelectorAll('.gallery-fig img').forEach(img => {
   });
 });
 
-/* ---------- Dashboard Charts ---------- */
+/* ---------- Dashboard Charts Declarations ---------- */
+let colChartInstance = null;
+let pizzaChartInstance = null;
+let bubbleChartInstance = null;
+
+// Função para atualizar dinamicamente as cores dos gráficos com base no tema ativo
+function updateChartsTheme(isLight) {
+  const textColor = isLight ? '#57606a' : '#8b949e';
+  const gridColor = isLight ? 'rgba(208, 215, 222, 0.4)' : 'rgba(48, 54, 61, 0.4)';
+  const tooltipBg = isLight ? '#ffffff' : '#161b22';
+  const tooltipBorder = isLight ? '#d0d7de' : '#30363d';
+  const tooltipTextColor = isLight ? '#24292f' : '#e6edf3';
+  const tooltipBodyColor = isLight ? '#57606a' : '#8b949e';
+  const doughnutBorderColor = isLight ? '#ffffff' : '#161b22';
+
+  if (colChartInstance) {
+    colChartInstance.options.scales.x.grid.color = gridColor;
+    colChartInstance.options.scales.x.ticks.color = textColor;
+    colChartInstance.options.scales.y.grid.color = gridColor;
+    colChartInstance.options.scales.y.ticks.color = textColor;
+    colChartInstance.options.plugins.tooltip.backgroundColor = tooltipBg;
+    colChartInstance.options.plugins.tooltip.borderColor = tooltipBorder;
+    colChartInstance.options.plugins.tooltip.titleColor = tooltipTextColor;
+    colChartInstance.options.plugins.tooltip.bodyColor = tooltipTextColor;
+    colChartInstance.update();
+  }
+
+  if (pizzaChartInstance) {
+    pizzaChartInstance.data.datasets[0].borderColor = doughnutBorderColor;
+    pizzaChartInstance.options.plugins.legend.labels.color = textColor;
+    pizzaChartInstance.options.plugins.tooltip.backgroundColor = tooltipBg;
+    pizzaChartInstance.options.plugins.tooltip.borderColor = tooltipBorder;
+    pizzaChartInstance.options.plugins.tooltip.titleColor = tooltipTextColor;
+    pizzaChartInstance.options.plugins.tooltip.bodyColor = tooltipTextColor;
+    pizzaChartInstance.update();
+  }
+
+  if (bubbleChartInstance) {
+    bubbleChartInstance.options.scales.x.grid.color = gridColor;
+    bubbleChartInstance.options.scales.x.ticks.color = textColor;
+    bubbleChartInstance.options.scales.x.title.color = textColor;
+    bubbleChartInstance.options.scales.y.grid.color = gridColor;
+    bubbleChartInstance.options.scales.y.ticks.color = textColor;
+    bubbleChartInstance.options.scales.y.title.color = textColor;
+    bubbleChartInstance.options.plugins.tooltip.backgroundColor = tooltipBg;
+    bubbleChartInstance.options.plugins.tooltip.borderColor = tooltipBorder;
+    bubbleChartInstance.options.plugins.tooltip.titleColor = tooltipTextColor;
+    bubbleChartInstance.options.plugins.tooltip.bodyColor = tooltipBodyColor;
+    
+    // Altera dinamicamente as cores dos labels das bolinhas para garantir leitura legível em modo claro e escuro
+    bubbleChartInstance.options.plugins.datalabels.color = isLight ? '#24292f' : '#e6edf3';
+    
+    bubbleChartInstance.update();
+  }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   const colCtx = document.getElementById('colunasChart');
   const pizCtx = document.getElementById('pizzaChart');
@@ -185,7 +255,7 @@ document.addEventListener('DOMContentLoaded', () => {
   Chart.defaults.color = '#8b949e';
 
   // 1. Column Chart (Left Side) - Banks & Modelings
-  new Chart(colCtx, {
+  colChartInstance = new Chart(colCtx, {
     type: 'bar',
     data: {
       labels: ['WolfCMS', 'PHPRunner', 'Oracle SQL', 'Powerdesigner', 'Workbench', 'MySQL'],
@@ -269,7 +339,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // 2. Pie/Doughnut Chart (Right Side) - Main Technologies
-  new Chart(pizCtx, {
+  pizzaChartInstance = new Chart(pizCtx, {
     type: 'doughnut',
     data: {
       labels: ['Powerbuilder', 'PHP', 'C#', 'DevOps / ALM'],
@@ -367,7 +437,7 @@ document.addEventListener('DOMContentLoaded', () => {
     ]
   };
 
-  new Chart(bubCtx, {
+  bubbleChartInstance = new Chart(bubCtx, {
     type: 'bubble',
     data: { datasets: [smallBubbles, mediumBubbles, largeBubbles] },
     plugins: [{
@@ -400,7 +470,7 @@ document.addEventListener('DOMContentLoaded', () => {
             ctx2.beginPath();
             ctx2.moveTo(x1, y1);
             ctx2.lineTo(x2, y2);
-            ctx2.strokeStyle = 'rgba(139, 148, 158, 0.6)';
+            ctx2.strokeStyle = chart.options.scales.x.grid.color || 'rgba(139, 148, 158, 0.6)';
             ctx2.lineWidth = 1;
             ctx2.stroke();
             ctx2.restore();
@@ -489,5 +559,18 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
   });
+
+  // Garante que os gráficos sejam iniciados com as cores corretas de acordo com o tema atual
+  const isCurrentlyLight = document.documentElement.classList.contains('light-theme');
+  updateChartsTheme(isCurrentlyLight);
 });
 
+/* ---------- Theme Switcher Logic ---------- */
+const themeToggleBtn = document.getElementById('theme-toggle');
+if (themeToggleBtn) {
+  themeToggleBtn.addEventListener('click', () => {
+    const isLight = document.documentElement.classList.toggle('light-theme');
+    localStorage.setItem('theme', isLight ? 'light' : 'dark');
+    updateChartsTheme(isLight);
+  });
+}

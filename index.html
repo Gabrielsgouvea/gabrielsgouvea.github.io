@@ -17,6 +17,16 @@
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='4' fill='%230d1117'/%3E%3Cpath fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' d='M8 9l3 3-3 3M13 15h3M3 6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6z'/%3E%3C/svg%3E" />
   <link rel="shortcut icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='4' fill='%230d1117'/%3E%3Cpath fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' d='M8 9l3 3-3 3M13 15h3M3 6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6z'/%3E%3C/svg%3E" />
   <meta name="theme-color" content="#0d1117" />
+  
+  <script>
+    // Executado imediatamente para evitar o "flash" de tema indesejado antes da renderização
+    (function() {
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'light') {
+        document.documentElement.classList.add('light-theme');
+      }
+    })();
+  </script>
 </head>
 
 <body>
@@ -27,6 +37,8 @@
       <!-- Linha 1: brand + botão PDF + toggle mobile -->
       <div class="nav-top-row">
         <div class="nav-brand">
+        
+
           <a href="https://github.com/Gabrielsgouvea" class="nav-social-link" target="_blank" rel="noopener"
             aria-label="GitHub de Gabriel Gouvêa">
             <svg class="nav-social-icon" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
@@ -38,7 +50,7 @@
             target="_blank" rel="noopener" aria-label="LinkedIn de Gabriel Gouvêa">
             <svg class="nav-social-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
               <path
-                d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+                d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
             </svg>
           </a>
           <a href="#home" class="nav-logo" aria-label="Ir para o topo">
@@ -52,6 +64,7 @@
 
         <!-- Botão PDF + toggle -->
         <div class="nav-top-actions">
+          <p class="profile-bio"> Arquivo em PDF</p>
           <div class="nav-pdf-wrapper">
             <button class="nav-pdf-btn" id="nav-pdf-btn" aria-label="Currículo em PDF" aria-expanded="false">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -85,6 +98,18 @@
           </div>
           <button class="nav-toggle" id="nav-toggle" aria-label="Abrir menu">
             <span></span><span></span><span></span>
+          </button>
+            <!-- Botão de Alternância de Tema -->
+          <button id="theme-toggle" class="theme-toggle-btn" aria-label="Alternar tema claro/escuro">
+            <!-- Ícone do Sol (Visível no tema claro) -->
+            <svg class="theme-icon moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="4"></circle>
+              <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path>
+            </svg> 
+            <!-- Ícone da Lua (Visível no tema escuro) -->
+            <svg class="theme-icon sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+            </svg>
           </button>
         </div>
       </div>
@@ -133,7 +158,7 @@
           <div class="dashboard-card">
             <div class="dashboard-card-header">
               <svg class="dashboard-card-icon" viewBox="0 0 16 16" fill="currentColor">
-                <path d="M8 1c3.866 0 7 1.12 7 2.5s-3.134 2.5-7 2.5-7-1.12-7-2.5S4.134 1 8 1ZM1 6c0 1.38 3.134 2.5 7 2.5s7-1.12 7-2.5V4.717c-.91 1.018-3.4 1.783-6 1.783s-5.09-.765-6-1.783V6Zm14 2.5c0 1.38-3.134 2.5-7 2.5-7-1.12-7-2.5V7.217c-.91 1.018-3.4 1.783-6 1.783s-5.09-.765-6-1.783V8.5Zm14 2.5c0 1.38-3.134 2.5-7 2.5-7-1.12-7-2.5v-1.283c-.91 1.018-3.4 1.783-6 1.783s-5.09-.765-6-1.783V11Z"/>
+                <path d="M8 1c3.866 0 7 1.12 7 2.5s-3.134 2.5-7 2.5-7-1.12-7-2.5S4.134 1 8 1ZM1 6c0 1.38 3.134 2.5 7 2.5s7-1.12 7-2.5V4.717c-.91 1.018-3.4 1.783-6 1.783s-5.09-.765-6-1.783V6Zm14 2.5c0 1.38-3.134 2.5-7 2.5s-7-1.12-7-2.5V7.217c-.91 1.018-3.4 1.783-6 1.783s-5.09-.765-6-1.783V8.5Zm14 2.5c0 1.38-3.134 2.5-7 2.5s-7-1.12-7-2.5v-1.283c-.91 1.018-3.4 1.783-6 1.783s-5.09-.765-6-1.783V11Z"/>
               </svg>
               <h3>Bancos de Dados & Modelagem</h3>
             </div>
@@ -635,7 +660,7 @@
       <div class="footer-links">
         <a href="https://www.linkedin.com/in/gabrielsgouvea/" target="_blank" rel="noopener" aria-label="LinkedIn">
           <svg class="footer-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
           </svg>
           linkedin.com/in/gabrielsgouvea
         </a>
@@ -656,6 +681,19 @@
       e.preventDefault();
       e.stopPropagation();
       var url = 'arq/CV-Gabriel.pdf';
+      
+      // Evita erros de restrição de segurança CORS (Cross-Origin) ao visualizar no protocolo file:// localmente
+      if (window.location.protocol === 'file:') {
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = 'CV-Gabriel.pdf';
+        a.setAttribute('target', '_blank');
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        return;
+      }
+
       fetch(url)
         .then(function(response) { return response.blob(); })
         .then(function(blob) {
@@ -669,7 +707,7 @@
           URL.revokeObjectURL(blobUrl);
         })
         .catch(function() {
-          // Fallback: force download via direct link
+          // Fallback: força download via link direto sem fetch
           var a = document.createElement('a');
           a.href = url;
           a.download = 'CV-Gabriel.pdf';
