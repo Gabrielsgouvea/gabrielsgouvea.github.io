@@ -86,12 +86,26 @@ const scrollTargets = document.querySelectorAll('section[id], h2[id], h1[id]');
 const navItems = document.querySelectorAll('.nav-link[data-section]');
 
 function updateActiveLink() {
-  const scrollPos = window.scrollY + 90;
+  const scrollPos = window.scrollY + 120; // Calibrado para scroll-margin-top (100px)
   let current = '';
 
-  scrollTargets.forEach(el => {
-    if (scrollPos >= el.offsetTop) current = el.id;
-  });
+  // Detecção se o usuário chegou ao final absoluto da página
+  const isBottom = (window.innerHeight + window.scrollY) >= (document.documentElement.scrollHeight - 10);
+
+  if (isBottom) {
+    const targetIdsWithNav = Array.from(navItems).map(item => item.dataset.section);
+    for (let i = scrollTargets.length - 1; i >= 0; i--) {
+      const id = scrollTargets[i].id;
+      if (targetIdsWithNav.includes(id)) {
+        current = id;
+        break;
+      }
+    }
+  } else {
+    scrollTargets.forEach(el => {
+      if (scrollPos >= el.offsetTop) current = el.id;
+    });
+  }
 
   navItems.forEach(item => {
     item.classList.toggle('active', item.dataset.section === current);
@@ -134,6 +148,12 @@ document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 /* ---------- Smooth scroll for nav links ---------- */
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
   anchor.addEventListener('click', e => {
+    // Se for o logo (casinha ou nome), rola para o topo total (y = 0)
+    if (anchor.classList.contains('nav-logo')) {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
     const target = document.querySelector(anchor.getAttribute('href'));
     if (target) {
       e.preventDefault();
@@ -168,6 +188,7 @@ document.querySelectorAll('.gallery-fig img').forEach(img => {
 let colChartInstance = null;
 let pizzaChartInstance = null;
 let bubbleChartInstance = null;
+let radarChartInstance = null;
 
 // Função para atualizar dinamicamente as cores dos gráficos com base no tema ativo
 function updateChartsTheme(isLight) {
@@ -217,6 +238,25 @@ function updateChartsTheme(isLight) {
     bubbleChartInstance.options.plugins.datalabels.color = isLight ? '#24292f' : '#e6edf3';
     
     bubbleChartInstance.update();
+  }
+
+  if (radarChartInstance) {
+    const accentBlue = isLight ? '#0969da' : '#1f6feb';
+    radarChartInstance.data.datasets[0].borderColor = accentBlue;
+    radarChartInstance.data.datasets[0].pointBackgroundColor = accentBlue;
+    radarChartInstance.data.datasets[0].backgroundColor = isLight ? 'rgba(9, 105, 218, 0.12)' : 'rgba(31, 111, 235, 0.15)';
+    
+    radarChartInstance.options.scales.r.grid.color = gridColor;
+    radarChartInstance.options.scales.r.angleLines.color = gridColor;
+    radarChartInstance.options.scales.r.ticks.color = textColor;
+    radarChartInstance.options.scales.r.pointLabels.color = isLight ? '#24292f' : '#e6edf3';
+    
+    radarChartInstance.options.plugins.tooltip.backgroundColor = tooltipBg;
+    radarChartInstance.options.plugins.tooltip.borderColor = tooltipBorder;
+    radarChartInstance.options.plugins.tooltip.titleColor = tooltipTextColor;
+    radarChartInstance.options.plugins.tooltip.bodyColor = tooltipTextColor;
+    
+    radarChartInstance.update();
   }
 }
 
@@ -463,14 +503,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const x1 = x + dx * (r + 2);
             const y1 = y + dy * (r + 2);
-            const x2 = x + dx * (r + 11);
-            const y2 = y + dy * (r + 11);
+            const x2 = x + dx * (r + 12);
+            const y2 = y + dy * (r + 12);
 
             ctx2.save();
             ctx2.beginPath();
             ctx2.moveTo(x1, y1);
             ctx2.lineTo(x2, y2);
-            ctx2.strokeStyle = chart.options.scales.x.grid.color || 'rgba(139, 148, 158, 0.6)';
+            ctx2.strokeStyle = dataset.borderColor || 'rgba(139, 148, 158, 0.6)';
             ctx2.lineWidth = 1;
             ctx2.stroke();
             ctx2.restore();
@@ -514,8 +554,8 @@ document.addEventListener('DOMContentLoaded', () => {
             return 'top';
           },
           offset: (ctx) => {
-            const label = ctx.dataset.data[ctx.dataIndex].label;
-            return label === 'Visual Basic 6.0' ? 30 : 16;
+            const r = ctx.dataset.data[ctx.dataIndex].r;
+            return r + 14;
           },
           font: { size: 10, weight: '500' },
           formatter: (value) => value.label
@@ -559,6 +599,74 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
   });
+
+  // 4. Radar Chart — Resumo Geral das Habilidades (Teia de 10 níveis)
+  const radCtx = document.getElementById('radarChart');
+  if (radCtx) {
+    radarChartInstance = new Chart(radCtx, {
+      type: 'radar',
+      data: {
+        labels: ['Desenvolvimento', 'Finanças', 'Redes', 'Segurança', 'Designer'],
+        datasets: [{
+          label: 'Nível de Habilidade',
+          data: [9, 7, 6, 6, 4],
+          backgroundColor: 'rgba(31, 111, 235, 0.15)',
+          borderColor: '#1f6feb',
+          pointBackgroundColor: '#1f6feb',
+          pointBorderColor: '#ffffff',
+          pointHoverBackgroundColor: '#ffffff',
+          pointHoverBorderColor: '#1f6feb',
+          borderWidth: 2,
+          pointRadius: 4
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          datalabels: { display: false }, // O radar fica mais limpo sem datalabels numéricos nas pontas
+          tooltip: {
+            backgroundColor: '#161b22',
+            borderColor: '#30363d',
+            borderWidth: 1,
+            titleColor: '#e6edf3',
+            bodyColor: '#e6edf3',
+            padding: 10,
+            displayColors: false,
+            callbacks: {
+              label: function(context) {
+                return ` Nível: ${context.raw}/10`;
+              }
+            }
+          }
+        },
+        scales: {
+          r: {
+            min: 0,
+            max: 10,
+            ticks: {
+              stepSize: 1,
+              display: true,
+              backdropColor: 'transparent',
+              color: '#8b949e',
+              font: { size: 10 }
+            },
+            grid: {
+              color: 'rgba(48, 54, 61, 0.4)'
+            },
+            angleLines: {
+              color: 'rgba(48, 54, 61, 0.4)'
+            },
+            pointLabels: {
+              color: '#8b949e',
+              font: { size: 11, weight: '600' }
+            }
+          }
+        }
+      }
+    });
+  }
 
   // Garante que os gráficos sejam iniciados com as cores corretas de acordo com o tema atual
   const isCurrentlyLight = document.documentElement.classList.contains('light-theme');
