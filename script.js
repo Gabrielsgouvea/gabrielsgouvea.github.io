@@ -493,7 +493,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const r = point.r;
 
             const rightLabels = ['JavaScript'];
-            const belowLabels = ['Python', 'HTML'];
+            const belowLabels = ['Python', 'HTML', 'Basic4android / B4J'];
             const leftLabels  = ['CSS'];
 
             let dx = 0, dy = -1; // default: top
@@ -549,7 +549,7 @@ document.addEventListener('DOMContentLoaded', () => {
           align: (ctx) => {
             const label = ctx.dataset.data[ctx.dataIndex].label;
             if (['JavaScript'].includes(label)) return 'right';
-            if (['Python', 'HTML'].includes(label)) return 'bottom';
+            if (['Python', 'HTML', 'Basic4android / B4J'].includes(label)) return 'bottom';
             if (['CSS'].includes(label)) return 'left';
             return 'top';
           },
