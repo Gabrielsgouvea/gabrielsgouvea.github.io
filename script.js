@@ -445,7 +445,7 @@ document.addEventListener('DOMContentLoaded', () => {
     borderWidth: 1.5,
     hoverBackgroundColor: 'rgba(56, 139, 253, 0.9)',
     data: [
-      { x: 3,   y: 1,    r: 9,  label: 'HTML' },
+      { x: 3,   y: 1.0,  r: 9,  label: 'HTML' },
       { x: 2,   y: 0.5,  r: 9,  label: 'Java' },
       { x: 2.3, y: 0.42, r: 9,  label: 'JavaScript' },
       { x: 1,   y: 0.25, r: 9,  label: 'CSS' },
@@ -462,7 +462,7 @@ document.addEventListener('DOMContentLoaded', () => {
     hoverBackgroundColor: 'rgba(86, 211, 100, 0.9)',
     data: [
       { x: 4, y: 2, r: 16, label: 'Basic4android / B4J' },
-      { x: 3, y: 2, r: 16, label: 'Xojo (RealBasic)' },
+      { x: 3, y: 2.15, r: 16, label: 'Xojo (RealBasic)' },
     ]
   };
 
@@ -493,7 +493,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const r = point.r;
 
             const rightLabels = ['JavaScript'];
-            const belowLabels = ['Python', 'Xojo (RealBasic)'];
+            const belowLabels = ['Python', 'HTML'];
             const leftLabels  = ['CSS'];
 
             let dx = 0, dy = -1; // default: top
@@ -510,7 +510,7 @@ document.addEventListener('DOMContentLoaded', () => {
             ctx2.beginPath();
             ctx2.moveTo(x1, y1);
             ctx2.lineTo(x2, y2);
-            ctx2.strokeStyle = dataset.borderColor || 'rgba(139, 148, 158, 0.6)';
+            ctx2.strokeStyle = document.documentElement.classList.contains('light-theme') ? '#000000' : '#ffffff';
             ctx2.lineWidth = 1;
             ctx2.stroke();
             ctx2.restore();
@@ -549,7 +549,7 @@ document.addEventListener('DOMContentLoaded', () => {
           align: (ctx) => {
             const label = ctx.dataset.data[ctx.dataIndex].label;
             if (['JavaScript'].includes(label)) return 'right';
-            if (['Python', 'Xojo (RealBasic)'].includes(label)) return 'bottom';
+            if (['Python', 'HTML'].includes(label)) return 'bottom';
             if (['CSS'].includes(label)) return 'left';
             return 'top';
           },

@@ -492,6 +492,28 @@ ul { list-style: none; }
   margin-top: 0.75rem;
 }
 
+.job-areas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.5rem;
+}
+
+.area-tag {
+  background: var(--bg-overlay);
+  border: 1px solid var(--border-default);
+  border-radius: 20px;
+  padding: 0.18rem 0.7rem;
+  font-family: var(--font-mono);
+  font-size: 0.775rem;
+  color: var(--accent-green);
+  transition: background var(--transition), border-color var(--transition);
+}
+
+.area-tag:hover {
+  background: var(--bg-subtle);
+}
+
 /* ============================================================
    EDUCATION / FORMAÇÃO
    ============================================================ */
