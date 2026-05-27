@@ -452,11 +452,11 @@ document.addEventListener('DOMContentLoaded', () => {
     hoverBackgroundColor: 'rgba(56, 139, 253, 0.9)',
     data: [
       { x: 3,   y: 1.0,  r: 9,  label: 'HTML' },
-      { x: 2,   y: 0.5,  r: 9,  label: 'Java' },
+      { x: 1.5, y: 0.5,  r: 9,  label: 'Java' }, // Alterado de 2 para 1.5
       { x: 2.3, y: 0.42, r: 9,  label: 'JavaScript' },
-      { x: 1,   y: 0.25, r: 9,  label: 'CSS' },
-      { x: 1.7, y: 0.42, r: 9,  label: 'Python' },
-      { x: 1,   y: 0.5,  r: 9,  label: 'C' },
+      { x: 0.3, y: 0.25, r: 9,  label: 'CSS' },  // Alterado de 1 para 0.3
+      { x: 1.0, y: 0.42, r: 9,  label: 'Python' }, // Alterado de 1.7 para 1.0
+      { x: 0.4, y: 0.5,  r: 9,  label: 'C' },      // Alterado de 1 para 0.4
     ]
   };
 
@@ -467,8 +467,8 @@ document.addEventListener('DOMContentLoaded', () => {
     borderWidth: 1.5,
     hoverBackgroundColor: 'rgba(86, 211, 100, 0.9)',
     data: [
-      { x: 4.6, y: 0.92, r: 16, label: 'Basic4android / B4J' },
-      { x: 5.3, y: 0.92, r: 16, label: 'Xojo (RealBasic)' },
+      { x: 4.1, y: 0.92, r: 16, label: 'Basic4android / B4J' }, // Alterado de 4.6 para 4.1
+      { x: 5.8, y: 0.92, r: 16, label: 'Xojo (RealBasic)' },    // Alterado de 5.3 para 5.8
     ]
   };
 
@@ -498,8 +498,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const { x, y } = el;
             const r = point.r;
 
-            const rightLabels = ['JavaScript'];
-            const belowLabels = ['Python', 'HTML', 'Basic4android / B4J'];
+            const rightLabels = ['JavaScript', 'Xojo (RealBasic)']; // Adicionado Xojo aqui
+            const belowLabels = ['Python', 'HTML']; // Removido Basic4android daqui (vai para cima por padrão)
             const leftLabels  = ['CSS'];
 
             let dx = 0, dy = -1; // default: top
@@ -556,10 +556,10 @@ document.addEventListener('DOMContentLoaded', () => {
           anchor: 'center',
           align: (ctx) => {
             const label = ctx.dataset.data[ctx.dataIndex].label;
-            if (['JavaScript'].includes(label)) return 'right';
-            if (['Python', 'HTML', 'Basic4android / B4J'].includes(label)) return 'bottom';
+            if (['JavaScript', 'Xojo (RealBasic)'].includes(label)) return 'right';
+            if (['Python', 'HTML'].includes(label)) return 'bottom';
             if (['CSS'].includes(label)) return 'left';
-            return 'top';
+            return 'top'; // Basic4android cairá aqui e o texto ficará acima
           },
           offset: (ctx) => {
             const r = ctx.dataset.data[ctx.dataIndex].r;
