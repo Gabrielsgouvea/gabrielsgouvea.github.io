@@ -223,7 +223,13 @@ function updateChartsTheme(isLight) {
   }
 
   if (bubbleChartInstance) {
-    bubbleChartInstance.options.scales.x.grid.color = gridColor;
+    bubbleChartInstance.options.scales.x.grid.color = (ctx) => {
+      const v = ctx.tick.value;
+      if (Math.abs(v - 3.33) < 0.1 || Math.abs(v - 6.66) < 0.1) {
+        return isLight ? 'rgba(208, 215, 222, 0.4)' : 'rgba(48, 54, 61, 0.4)';
+      }
+      return 'transparent';
+    };
     bubbleChartInstance.options.scales.x.ticks.color = textColor;
     bubbleChartInstance.options.scales.x.title.color = textColor;
     bubbleChartInstance.options.scales.y.grid.color = gridColor;
@@ -439,7 +445,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (!bubCtx) return;
 
   const smallBubbles = {
-    label: 'Pequeno (P)',
+    label: '(P)',
     backgroundColor: 'rgba(31, 111, 235, 0.75)',
     borderColor: '#388bfd',
     borderWidth: 1.5,
@@ -455,19 +461,19 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   const mediumBubbles = {
-    label: 'Médio (M)',
+    label: '(M)',
     backgroundColor: 'rgba(63, 185, 80, 0.75)',
     borderColor: '#56d364',
     borderWidth: 1.5,
     hoverBackgroundColor: 'rgba(86, 211, 100, 0.9)',
     data: [
-      { x: 4, y: 2, r: 16, label: 'Basic4android / B4J' },
-      { x: 3, y: 2.15, r: 16, label: 'Xojo (RealBasic)' },
+      { x: 4.6, y: 0.92, r: 16, label: 'Basic4android / B4J' },
+      { x: 5.3, y: 0.92, r: 16, label: 'Xojo (RealBasic)' },
     ]
   };
 
   const largeBubbles = {
-    label: 'Grande (G)',
+    label: '(G)',
     backgroundColor: 'rgba(248, 81, 73, 0.75)',
     borderColor: '#ff7b72',
     borderWidth: 1.5,
@@ -539,7 +545,9 @@ document.addEventListener('DOMContentLoaded', () => {
               const tempoStr = d.y >= 1
                 ? `${d.y} ano${d.y > 1 ? 's' : ''}`
                 : `${meses} ${meses === 1 ? 'mês' : 'meses'}`;
-              return [` Estudo: ${tempoStr}`, ` Nível de Domínio: ${d.x}/10`];
+              const nivelMap = { 1: 'Fundamentos', 2: 'Fundamentos', 3: 'Fundamentos', 4: 'Prática Consolidada', 5: 'Prática Consolidada', 6: 'Prática Consolidada', 7: 'Prática Consolidada', 8: 'Estudos Avançados', 9: 'Estudos Avançados', 10: 'Estudos Avançados' };
+              const nivelLabel = nivelMap[d.x] || '';
+              return [` Estudo: ${tempoStr}`, ` Estágio: ${nivelLabel}`];
             }
           }
         },
@@ -565,17 +573,40 @@ document.addEventListener('DOMContentLoaded', () => {
         x: {
           title: {
             display: true,
-            text: 'Nível de Domínio',
+            text: 'Estágio de Aprendizado',
             color: '#8b949e',
             font: { size: 12 }
           },
           min: 0,
           max: 10,
-          ticks: {
-            stepSize: 1,
-            callback: (v) => v === 0 ? '' : v
+          afterBuildTicks: (axis) => {
+            // Place ticks at the centers (1.67, 5, 8.33) and boundary lines (3.33, 6.66)
+            axis.ticks = [
+              { value: 1.67 },
+              { value: 3.33 },
+              { value: 5.0 },
+              { value: 6.66 },
+              { value: 8.33 }
+            ];
           },
-          grid: { color: 'rgba(48, 54, 61, 0.4)' }
+          ticks: {
+            callback: (v) => {
+              if (Math.abs(v - 1.67) < 0.1) return '(P)';
+              if (Math.abs(v - 5.0) < 0.1) return '(M)';
+              if (Math.abs(v - 8.33) < 0.1) return '(G)';
+              return '';
+            }
+          },
+          grid: {
+            color: (ctx) => {
+              const v = ctx.tick.value;
+              // Draw visible grid lines only at zone boundaries (3.33 and 6.66)
+              if (Math.abs(v - 3.33) < 0.1 || Math.abs(v - 6.66) < 0.1) {
+                return 'rgba(48, 54, 61, 0.4)';
+              }
+              return 'transparent';
+            }
+          }
         },
         y: {
           title: {
@@ -636,7 +667,7 @@ document.addEventListener('DOMContentLoaded', () => {
             displayColors: false,
             callbacks: {
               label: function(context) {
-                return ` Nível: ${context.raw}/10`;
+                return ` ${context.label}`;
               }
             }
           }
@@ -647,7 +678,7 @@ document.addEventListener('DOMContentLoaded', () => {
             max: 10,
             ticks: {
               stepSize: 1,
-              display: true,
+              display: false,
               backdropColor: 'transparent',
               color: '#8b949e',
               font: { size: 10 }
